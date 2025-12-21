@@ -35,13 +35,16 @@ class SchedulerHealthCheck extends JoomlaCheck
         ]);
     }
 
+    /**
+     * @return array<int, array<string, mixed>>
+     */
     protected function overdueTasks(): array
     {
         $db = $this->db();
         $query = $db->getQuery(true)
             ->select($db->quoteName(['title', 'last_execution', 'next_execution']))
             ->from($db->quoteName('#__scheduler_tasks'))
-            ->where($db->quoteName('state').' = 1');
+            ->where($this->quoteName('state') . ' = 1');
 
         $db->setQuery($query);
         $tasks = $db->loadAssocList();

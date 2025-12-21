@@ -49,6 +49,9 @@ class CoreEnvironmentCheck extends JoomlaCheck
         ]);
     }
 
+    /**
+     * @return array<int, string>
+     */
     protected function requiredExtensions(): array
     {
         return [
@@ -61,6 +64,9 @@ class CoreEnvironmentCheck extends JoomlaCheck
         ];
     }
 
+    /**
+     * @return array<int, string>
+     */
     protected function missingExtensions(): array
     {
         return array_values(
@@ -133,7 +139,7 @@ class CoreEnvironmentCheck extends JoomlaCheck
             $query = $db->getQuery(true)
                 ->select('COUNT(*)')
                 ->from($db->quoteName('#__updates'))
-                ->where($db->quoteName('extension_id') . ' = 700');
+                ->where($this->quoteName('extension_id') . ' = 700');
 
             $db->setQuery($query);
 

@@ -90,7 +90,7 @@ class CacheCheck extends JoomlaCheck
                 static::$cacheCallbackValue = null;
             }
 
-            return static::$cacheCallbackCallCount === 1 && $first === $value && $second === $value;
+            return static::$cacheCallbackCallCount === 1 && $first === $value && $second === $value; // @phpstan-ignore-line
         }
 
         return false;
@@ -110,10 +110,7 @@ class CacheCheck extends JoomlaCheck
         }
 
         try {
-            if (
-                class_exists(CacheControllerFactoryInterface::class)
-                && method_exists(Factory::class, 'getContainer')
-            ) {
+            if (class_exists(CacheControllerFactoryInterface::class)) {
                 $container = Factory::getContainer();
 
                 if ($container->has(CacheControllerFactoryInterface::class)) {
@@ -128,16 +125,10 @@ class CacheCheck extends JoomlaCheck
             // Ignore and fallback below.
         }
 
-        if (method_exists(Factory::class, 'getCache')) {
-            try {
-                $cache = Factory::getCache('vigilanthealthchecks', 'callback');
-
-                return is_object($cache) ? $cache : null;
-            } catch (Throwable) {
-                return null;
-            }
+        try {
+            return Factory::getCache('vigilanthealthchecks', 'callback');
+        } catch (Throwable) {
+            return null;
         }
-
-        return null;
     }
 }

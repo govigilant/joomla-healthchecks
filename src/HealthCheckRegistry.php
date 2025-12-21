@@ -19,10 +19,10 @@ use Vigilant\JoomlaHealthchecks\Checks\SecuritySettingsCheck;
 
 class HealthCheckRegistry
 {
-    /** @var array<Check> */
+    /** @var array<int, Check> */
     protected array $checks = [];
 
-    /** @var array<Metric> */
+    /** @var array<int, Metric> */
     protected array $metrics = [];
 
     public function __construct(bool $registerDefaults = true)
@@ -44,7 +44,7 @@ class HealthCheckRegistry
     }
 
     /**
-     * @return array<Check>
+     * @return array<int, Check>
      */
     public function getChecks(): array
     {
@@ -52,7 +52,7 @@ class HealthCheckRegistry
     }
 
     /**
-     * @return array<Metric>
+     * @return array<int, Metric>
      */
     public function getMetrics(): array
     {

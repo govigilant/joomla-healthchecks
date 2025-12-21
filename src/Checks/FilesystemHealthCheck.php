@@ -76,6 +76,9 @@ class FilesystemHealthCheck extends JoomlaCheck
         return null;
     }
 
+    /**
+     * @return array<int, string>
+     */
     protected function writableDirectories(): array
     {
         $root = defined('JPATH_ROOT') ? JPATH_ROOT : getcwd();
@@ -122,9 +125,9 @@ class FilesystemHealthCheck extends JoomlaCheck
         $query = $db->getQuery(true)
             ->select($db->quoteName('manifest_cache'))
             ->from($db->quoteName('#__extensions'))
-            ->where($db->quoteName('type') . '=' . $db->quote('plugin'))
-            ->where($db->quoteName('folder') . '=' . $db->quote('system'))
-            ->where($db->quoteName('element') . '=' . $db->quote('vigilanthealthchecks'));
+            ->where($this->quoteName('type') . ' = ' . $db->quote('plugin'))
+            ->where($this->quoteName('folder') . ' = ' . $db->quote('system'))
+            ->where($this->quoteName('element') . ' = ' . $db->quote('vigilanthealthchecks'));
 
         $db->setQuery($query);
         $cache = $db->loadResult();

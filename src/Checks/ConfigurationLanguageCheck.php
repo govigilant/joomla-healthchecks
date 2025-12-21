@@ -14,7 +14,7 @@ class ConfigurationLanguageCheck extends Check
 
     public function available(): bool
     {
-        return class_exists(Factory::class) && method_exists(Factory::class, 'getConfig');
+        return class_exists(Factory::class);
     }
 
     public function run(): ResultData

@@ -53,9 +53,9 @@ class SecuritySettingsCheck extends JoomlaCheck
         $query = $db->getQuery(true)
             ->select($db->quoteName('enabled'))
             ->from($db->quoteName('#__extensions'))
-            ->where($db->quoteName('type') . '=' . $db->quote('plugin'))
-            ->where($db->quoteName('folder') . '=' . $db->quote($folder))
-            ->where($db->quoteName('element') . '=' . $db->quote($element))
+            ->where($this->quoteName('type') . ' = ' . $db->quote('plugin'))
+            ->where($this->quoteName('folder') . ' = ' . $db->quote($folder))
+            ->where($this->quoteName('element') . ' = ' . $db->quote($element))
             ->setLimit(1);
 
         $db->setQuery($query);

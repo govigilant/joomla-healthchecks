@@ -41,6 +41,9 @@ class ExtensionsHealthCheck extends JoomlaCheck
         ]);
     }
 
+    /**
+     * @return array<int, array{0: string, 1: string, 2: string}>
+     */
     protected function criticalPlugins(): array
     {
         return [
@@ -55,9 +58,9 @@ class ExtensionsHealthCheck extends JoomlaCheck
         $query = $db->getQuery(true)
             ->select($db->quoteName('enabled'))
             ->from($db->quoteName('#__extensions'))
-            ->where($db->quoteName('type') . '=' . $db->quote('plugin'))
-            ->where($db->quoteName('folder') . '=' . $db->quote($folder))
-            ->where($db->quoteName('element') . '=' . $db->quote($element))
+            ->where($this->quoteName('type') . ' = ' . $db->quote('plugin'))
+            ->where($this->quoteName('folder') . ' = ' . $db->quote($folder))
+            ->where($this->quoteName('element') . ' = ' . $db->quote($element))
             ->setLimit(1);
 
         $db->setQuery($query);
@@ -72,7 +75,7 @@ class ExtensionsHealthCheck extends JoomlaCheck
         $query = $db->getQuery(true)
             ->select($db->quoteName(['id', 'lastvisitDate']))
             ->from($db->quoteName('#__users'))
-            ->where($db->quoteName('username') . '=' . $db->quote('admin'))
+            ->where($this->quoteName('username') . ' = ' . $db->quote('admin'))
             ->setLimit(1);
 
         $db->setQuery($query);

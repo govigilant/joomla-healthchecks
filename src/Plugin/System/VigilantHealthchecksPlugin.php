@@ -5,7 +5,9 @@ namespace Vigilant\JoomlaHealthchecks\Plugin\System;
 use Joomla\CMS\Application\CMSApplicationInterface;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Plugin\CMSPlugin;
+use Throwable;
 use Vigilant\HealthChecksBase\BuildResponse;
+use Vigilant\HealthChecksBase\Checks\Check;
 use Vigilant\HealthChecksBase\Checks\DiskSpaceCheck;
 use Vigilant\JoomlaHealthchecks\Checks\CacheCheck;
 use Vigilant\JoomlaHealthchecks\Checks\ConfigurationLanguageCheck;
@@ -27,6 +29,10 @@ class VigilantHealthchecksPlugin extends CMSPlugin
 
     protected HealthCheckRegistry $registry;
 
+    /**
+     * @param object $subject
+     * @param array<string, mixed> $config
+     */
     public function __construct(
         &$subject,
         array $config = [],
@@ -62,6 +68,10 @@ class VigilantHealthchecksPlugin extends CMSPlugin
         $this->respond($payload);
     }
 
+    /**
+     * @param array<int, Check> $checks
+     * @return array<int, Check>
+     */
     protected function filterDisabledChecks(array $checks): array
     {
         $disabled = $this->disabledCheckClasses();
@@ -75,6 +85,9 @@ class VigilantHealthchecksPlugin extends CMSPlugin
         }));
     }
 
+    /**
+     * @return array<int, class-string<Check>>
+     */
     protected function disabledCheckClasses(): array
     {
         $selected = $this->params->get('disabled_checks', []);
@@ -95,6 +108,9 @@ class VigilantHealthchecksPlugin extends CMSPlugin
         return $classes;
     }
 
+    /**
+     * @return array<string, class-string<Check>>
+     */
     protected function checkOptionMap(): array
     {
         return [
@@ -112,14 +128,21 @@ class VigilantHealthchecksPlugin extends CMSPlugin
 
     protected function shouldHandleRequest(): bool
     {
-        if (method_exists($this->application, 'isClient') && ! $this->application->isClient('site')) {
-            return false;
+        try {
+            if (! $this->application->isClient('site')) {
+                return false;
+            }
+        } catch (Throwable) {
+            // Assume front-end context if method is unavailable
         }
 
-        $input = $this->application->input;
-        $method = method_exists($input, 'getMethod')
-            ? strtoupper($input->getMethod())
-            : strtoupper($_SERVER['REQUEST_METHOD'] ?? 'GET');
+        $input = $this->application->getInput();
+
+        try {
+            $method = strtoupper($input->getMethod());
+        } catch (Throwable) {
+            $method = strtoupper($_SERVER['REQUEST_METHOD'] ?? 'GET');
+        }
 
         if ($method !== 'POST') {
             return false;
@@ -186,8 +209,10 @@ class VigilantHealthchecksPlugin extends CMSPlugin
     {
         http_response_code($status);
 
-        if (method_exists($this->application, 'setHeader')) {
+        try {
             $this->application->setHeader('Content-Type', 'application/json; charset=utf-8', true);
+        } catch (Throwable) {
+            // Ignore missing header support
         }
 
         $body = json_encode($payload, JSON_UNESCAPED_SLASHES);
@@ -197,7 +222,12 @@ class VigilantHealthchecksPlugin extends CMSPlugin
         }
 
         echo $body;
-        $this->application->close();
+
+        try {
+            $this->application->close();
+        } catch (Throwable) {
+            // Ignore missing close support
+        }
     }
 
     protected function respondUnauthorized(): void

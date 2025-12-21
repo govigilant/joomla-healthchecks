@@ -76,7 +76,7 @@ class DatabaseHealthCheck extends JoomlaCheck
         $query = $db->getQuery(true)
             ->select($db->quoteName('manifest_cache'))
             ->from($db->quoteName('#__extensions'))
-            ->where($db->quoteName('name').'='.$db->quote('files_joomla'));
+            ->where($this->quoteName('name') . ' = ' . $db->quote('files_joomla'));
 
         $db->setQuery($query);
         $cache = $db->loadResult();
@@ -92,6 +92,9 @@ class DatabaseHealthCheck extends JoomlaCheck
         return $schemaVersion === null || str_starts_with($joomlaVersion, $schemaVersion);
     }
 
+    /**
+     * @return array<int, string>
+     */
     protected function problematicTables(): array
     {
         if (! $this->usesMysqlDriver()) {

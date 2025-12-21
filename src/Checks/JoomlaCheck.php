@@ -4,6 +4,7 @@ namespace Vigilant\JoomlaHealthchecks\Checks;
 
 use Joomla\CMS\Factory;
 use Joomla\Database\DatabaseInterface;
+use Joomla\Registry\Registry;
 use Throwable;
 use Vigilant\HealthChecksBase\Checks\Check;
 
@@ -11,7 +12,7 @@ abstract class JoomlaCheck extends Check
 {
     protected ?DatabaseInterface $database = null;
 
-    protected function config()
+    protected function config(): Registry
     {
         return Factory::getConfig();
     }
@@ -23,10 +24,11 @@ abstract class JoomlaCheck extends Check
         }
 
         try {
-            if (method_exists(Factory::class, 'getContainer')) {
-                $container = Factory::getContainer();
-                if ($container->has(DatabaseInterface::class)) {
-                    $this->database = $container->get(DatabaseInterface::class);
+            $container = Factory::getContainer();
+            if ($container->has(DatabaseInterface::class)) {
+                $database = $container->get(DatabaseInterface::class);
+                if ($database instanceof DatabaseInterface) {
+                    $this->database = $database;
 
                     return $this->database;
                 }
@@ -42,7 +44,7 @@ abstract class JoomlaCheck extends Check
 
     protected function quoteName(string $name): string
     {
-        return $this->db()->quoteName($name);
+        return (string) $this->db()->quoteName($name);
     }
 
     protected function table(string $table): string
@@ -54,12 +56,22 @@ abstract class JoomlaCheck extends Check
     {
         $db = $this->db();
 
-        if (method_exists($db, 'getServerType')) {
-            return strtolower((string) $db->getServerType());
+        try {
+            $serverType = $db->getServerType();
+            if ($serverType !== null && $serverType !== '') {
+                return strtolower((string) $serverType);
+            }
+        } catch (Throwable) {
+            // Ignore and fallback
         }
 
-        if (method_exists($db, 'getDatabaseType')) {
-            return strtolower((string) $db->getDatabaseType());
+        try {
+            $databaseType = $db->getDatabaseType();
+            if ($databaseType !== null && $databaseType !== '') {
+                return strtolower((string) $databaseType);
+            }
+        } catch (Throwable) {
+            // Ignore and fallback
         }
 
         return '';
