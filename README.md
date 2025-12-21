@@ -9,6 +9,7 @@
     <a href="https://github.com/govigilant/joomla-healthchecks"><img src="https://img.shields.io/github/actions/workflow/status/govigilant/joomla-healthchecks/analyse.yml?label=analysis&style=flat-square" alt="Analysis"></a>
     <a href="https://packagist.org/packages/govigilant/joomla-healthchecks"><img src="https://img.shields.io/packagist/dt/govigilant/joomla-healthchecks?color=blue&style=flat-square" alt="Total downloads"></a>
 </p>
+
 A Joomla plugin that provides a healthcheck endpoint for any site and integrates seamlessly with [Vigilant](https://github.com/govigilant/vigilant).
 
 ## Features
@@ -64,7 +65,7 @@ $registry = $container->get(HealthCheckRegistry::class);
 $registry->registerMetric(DiskUsageMetric::make());
 ```
 
-Checks extend `Vigilant\HealthChecksBase\Checks\Check` and metrics extend `Vigilant\HealthChecksBase\Checks\Metric`, just like in the Laravel and Magento packages.
+Checks extend `Vigilant\HealthChecksBase\Checks\Check` and metrics extend `Vigilant\HealthChecksBase\Checks\Metric`.
 
 ## Development Environment
 
