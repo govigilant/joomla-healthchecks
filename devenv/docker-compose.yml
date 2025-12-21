@@ -1,0 +1,83 @@
+services:
+  joomla:
+    build:
+      context: ..
+      dockerfile: devenv/Dockerfile
+    env_file:
+      - ./app.env
+    environment:
+      JOOMLA_ROOT: /var/www/html
+      PLUGIN_PATH: /var/www/html/plugins/system/vigilanthealthchecks
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - joomla_storage:/var/www/html
+      - ../:/srv/package
+      - ../:/var/www/html/plugins/system/vigilanthealthchecks
+
+  joomla6:
+    build:
+      context: ..
+      dockerfile: devenv/Dockerfile
+      args:
+        JOOMLA_VERSION: "6.0.0"
+    env_file:
+      - ./app.env
+    environment:
+      JOOMLA_ROOT: /var/www/html
+      PLUGIN_PATH: /var/www/html/plugins/system/vigilanthealthchecks
+      JOOMLA_DB_HOST: db6
+      JOOMLA_DB_NAME: joomla6
+      JOOMLA_DB_USER: joomla6
+      JOOMLA_DB_PASSWORD: joomla6
+      JOOMLA_DB_PREFIX: vg6_
+    ports:
+      - "8001:8000"
+    depends_on:
+      db6:
+        condition: service_healthy
+    volumes:
+      - joomla6_storage:/var/www/html
+      - ../:/srv/package
+      - ../:/var/www/html/plugins/system/vigilanthealthchecks
+
+  db:
+    image: mariadb:11.4
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: joomla
+      MYSQL_USER: joomla
+      MYSQL_PASSWORD: joomla
+    volumes:
+      - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mariadb-admin", "ping", "-h", "127.0.0.1", "-uroot", "-proot"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+  db6:
+    image: mariadb:11.4
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: joomla6
+      MYSQL_USER: joomla6
+      MYSQL_PASSWORD: joomla6
+    volumes:
+      - db6_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mariadb-admin", "ping", "-h", "127.0.0.1", "-uroot", "-proot"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+volumes:
+  joomla_storage:
+  joomla6_storage:
+  db_data:
+  db6_data:

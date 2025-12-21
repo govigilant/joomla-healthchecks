@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="plugin" group="system" method="upgrade" version="5.0">
+    <name>plg_system_vigilanthealthchecks</name>
+    <creationDate>2025-12-19</creationDate>
+    <author>Vigilant</author>
+    <authorEmail>vincent@govigilant.io</authorEmail>
+    <authorUrl>https://govigilant.io</authorUrl>
+    <copyright>Copyright (c) Vigilant</copyright>
+    <license>MIT</license>
+    <version>1.0.0</version>
+    <description>PLG_SYSTEM_VIGILANTHEALTHCHECKS_DESC</description>
+    <namespace path="src">Vigilant\JoomlaHealthchecks</namespace>
+    <files>
+        <filename plugin="vigilanthealthchecks">vigilanthealthchecks.php</filename>
+        <folder>src</folder>
+        <folder>language</folder>
+        <folder>vendor</folder>
+        <filename>composer.json</filename>
+        <filename>LICENSE</filename>
+        <filename>README.md</filename>
+    </files>
+    <languages>
+        <language tag="en-GB">language/en-GB/en-GB.plg_system_vigilanthealthchecks.ini</language>
+        <language tag="en-GB">language/en-GB/en-GB.plg_system_vigilanthealthchecks.sys.ini</language>
+    </languages>
+    <config>
+        <fields name="params">
+            <fieldset name="basic" label="PLG_SYSTEM_VIGILANTHEALTHCHECKS_FIELDSET_BASIC">
+                <field
+                    name="disabled_checks"
+                    type="list"
+                    multiple="true"
+                    label="PLG_SYSTEM_VIGILANTHEALTHCHECKS_DISABLED_CHECKS_LABEL"
+                    description="PLG_SYSTEM_VIGILANTHEALTHCHECKS_DISABLED_CHECKS_DESC"
+                >
+                    <option value="configuration_language">PLG_SYSTEM_VIGILANTHEALTHCHECKS_DISABLED_CHECKS_CONFIGURATION_LANGUAGE</option>
+                    <option value="core_environment">PLG_SYSTEM_VIGILANTHEALTHCHECKS_DISABLED_CHECKS_CORE_ENVIRONMENT</option>
+                    <option value="filesystem">PLG_SYSTEM_VIGILANTHEALTHCHECKS_DISABLED_CHECKS_FILESYSTEM</option>
+                    <option value="database">PLG_SYSTEM_VIGILANTHEALTHCHECKS_DISABLED_CHECKS_DATABASE</option>
+                    <option value="extensions">PLG_SYSTEM_VIGILANTHEALTHCHECKS_DISABLED_CHECKS_EXTENSIONS</option>
+                    <option value="security_settings">PLG_SYSTEM_VIGILANTHEALTHCHECKS_DISABLED_CHECKS_SECURITY_SETTINGS</option>
+                    <option value="scheduler">PLG_SYSTEM_VIGILANTHEALTHCHECKS_DISABLED_CHECKS_SCHEDULER</option>
+                    <option value="cache">PLG_SYSTEM_VIGILANTHEALTHCHECKS_DISABLED_CHECKS_CACHE</option>
+                    <option value="disk_space">PLG_SYSTEM_VIGILANTHEALTHCHECKS_DISABLED_CHECKS_DISK_SPACE</option>
+                </field>
+                <field
+                    name="token"
+                    type="password"
+                    label="PLG_SYSTEM_VIGILANTHEALTHCHECKS_TOKEN_LABEL"
+                    description="PLG_SYSTEM_VIGILANTHEALTHCHECKS_TOKEN_DESC"
+                />
+            </fieldset>
+        </fields>
+    </config>
+</extension>

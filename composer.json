@@ -1,0 +1,59 @@
+{
+    "name": "govigilant/joomla-healthchecks",
+    "description": "A Joomla plugin that provides a healthcheck endpoint for any site and integrates seamlessly with Vigilant ",
+    "type": "library",
+    "license": "MIT",
+    "keywords": [
+        "vigilant",
+        "joomla",
+        "healthchecks"
+    ],
+    "homepage": "https://govigilant.io",
+    "authors": [
+        {
+            "name": "Vincent Bean",
+            "email": "vincent@govigilant.io",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "govigilant/vigilant-healthchecks-base": "^1.1"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^11.2",
+        "phpstan/phpstan": "^2.0"
+    },
+    "suggest": {
+        "joomla/cms": "^4.4 || ^5.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Vigilant\\JoomlaHealthchecks\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Vigilant\\JoomlaHealthchecks\\Tests\\": "tests"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "archive": {
+        "exclude": [
+            "devenv",
+            "art"
+        ]
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "scripts": {
+        "test": "phpunit",
+        "analyse": "phpstan",
+        "quality": [
+            "@test",
+            "@analyse"
+        ]
+    }
+}
