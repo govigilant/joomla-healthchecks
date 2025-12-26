@@ -155,7 +155,7 @@ class VigilantHealthchecksPlugin extends CMSPlugin
             $task = $input->getCmd('task');
         }
 
-        return $option === 'com_vigilant'
+        return $option === 'io_govigilant'
             && in_array($task, ['health.check', 'health_check'], true);
     }
 

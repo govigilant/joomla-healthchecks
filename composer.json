@@ -1,6 +1,6 @@
 {
     "name": "govigilant/joomla-healthchecks",
-    "description": "A Joomla plugin that provides a healthcheck endpoint for any site and integrates seamlessly with Vigilant ",
+    "description": "A Joomla plugin that provides a healthcheck endpoint for any site and integrates seamlessly with govigilant.io",
     "type": "library",
     "license": "MIT",
     "keywords": [

@@ -14,7 +14,7 @@ A Joomla plugin that provides a healthcheck endpoint for any site and integrates
 
 ## Features
 
-- Exposes health information and metrics on `POST /index.php?option=com_vigilant&task=health.check`.
+- Exposes health information and metrics on `POST /index.php?option=io_govigilant&task=health.check`.
 - Default checks for Joomla included
 - Allows registration of custom checks and metrics
 
@@ -41,13 +41,13 @@ Authorization: Bearer YOUR_TOKEN
 Once enabled, the health endpoint is reachable at:
 
 ```
-POST /index.php?option=com_vigilant&task=health.check
+POST /index.php?option=io_govigilant&task=health.check
 ```
 
 Example request:
 
 ```bash
-curl -X POST "https://your-site.test/index.php?option=com_vigilant&task=health.check" \
+curl -X POST "https://your-site.test/index.php?option=io_govigilant&task=health.check" \
   -H "Authorization: Bearer $VIGILANT_HEALTHCHECK_TOKEN" \
   -H "Content-Type: application/json"
 ```
@@ -66,6 +66,28 @@ $registry->registerMetric(DiskUsageMetric::make());
 ```
 
 Checks extend `Vigilant\HealthChecksBase\Checks\Check` and metrics extend `Vigilant\HealthChecksBase\Checks\Metric`.
+
+## Available Checks
+
+| Check | Description |
+|-------|-------------|
+| **CoreEnvironmentCheck** | Checks required PHP extensions, `display_errors`, and pending Joomla core updates. |
+| **FilesystemHealthCheck** | Validates `configuration.php` permissions, writable directories, installation directory cleanup, and plugin version alignment. |
+| **DatabaseHealthCheck** | Tests database connectivity, utf8mb4 support, schema alignment with Joomla core, and table integrity. |
+| **ExtensionsHealthCheck** | Confirms critical plugins are enabled, the debug plugin is disabled, and the default `admin` user is removed. |
+| **ConfigurationLanguageCheck** | Ensures Joomla's `language` and `metalang` configuration values are set. |
+| **SecuritySettingsCheck** | Verifies secure settings such as session handler, `force_ssl`, secret length, and admin login notification plugin. |
+| **SchedulerHealthCheck** | Flags overdue Joomla scheduler tasks whenever the scheduler tables exist. |
+| **CacheCheck** | Runs a read/write probe against the configured cache store. |
+| **DiskSpaceCheck** | Monitors available disk space. |
+
+## Available Metrics
+
+| Metric | Description |
+|--------|-------------|
+| **CpuLoadMetric** | Reports the current CPU load average. |
+| **MemoryUsageMetric** | Reports overall system memory usage. |
+| **DiskUsageMetric** | Reports disk space utilization percentages. |
 
 ## Development Environment
 
