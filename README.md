@@ -108,6 +108,16 @@ Run the quality checks locally:
 composer quality
 ```
 
+## Packaging for the Joomla Extension Directory
+
+Build an installable ZIP (with production dependencies) via:
+
+```bash
+scripts/package-jed.sh
+```
+
+The script assembles the plugin in a temporary directory, runs `composer install --no-dev`, and writes `dist/plg_system_vigilanthealthchecks.zip` for upload to the JED.
+
 ## Security Vulnerabilities
 
 Please review [our security policy](../../security/policy) on how to report security vulnerabilities.
