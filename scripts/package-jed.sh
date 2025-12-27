@@ -38,19 +38,28 @@ composer install \
 mkdir -p "$DIST_DIR"
 rm -f "$DIST_DIR/$ZIP_NAME"
 
-WORK_DIR="$WORK_DIR" DIST_ZIP="$DIST_DIR/$ZIP_NAME" python3 - <<'PY'
-import os
-from pathlib import Path
-import zipfile
-
-root = Path(os.environ["WORK_DIR"])
-zip_path = Path(os.environ["DIST_ZIP"])
-
-with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as archive:
-    for item in root.rglob("*"):
-        if item.is_file():
-            archive.write(item, item.relative_to(root))
-PY
+WORK_DIR="$WORK_DIR" DIST_ZIP="$DIST_DIR/$ZIP_NAME" php <<'PHP'
+<?php
+$root = getenv('WORK_DIR');
+$zipPath = getenv('DIST_ZIP');
+$zip = new ZipArchive();
+if ($zip->open($zipPath, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
+    fwrite(STDERR, "Unable to create ZIP at {$zipPath}\n");
+    exit(1);
+}
+$flags = FilesystemIterator::SKIP_DOTS;
+$iterator = new RecursiveIteratorIterator(
+    new RecursiveDirectoryIterator($root, $flags),
+    RecursiveIteratorIterator::SELF_FIRST
+);
+foreach ($iterator as $file) {
+    if ($file->isFile()) {
+        $relative = substr($file->getPathname(), strlen($root) + 1);
+        $zip->addFile($file->getPathname(), $relative);
+    }
+}
+$zip->close();
+PHP
 
 rm -rf "$WORK_DIR"
 
