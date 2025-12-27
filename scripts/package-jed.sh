@@ -11,21 +11,20 @@ rm -rf "$WORK_DIR"
 mkdir -p "$WORK_DIR"
 
 # Copy only the files needed to assemble the plugin
-tar -cf - \
-    --exclude=.git \
-    --exclude=.github \
-    --exclude=.idea \
-    --exclude=.vscode \
-    --exclude=dist \
-    --exclude=.jed-build \
-    --exclude=build \
-    --exclude=devenv \
-    --exclude=scripts \
-    --exclude=tests \
-    --exclude=stubs \
-    --exclude=art \
-    --exclude=vendor \
-    -C "$ROOT_DIR" . | tar -xf - -C "$WORK_DIR"
+PACKAGE_ITEMS="composer.json composer.lock LICENSE README.md vigilanthealthchecks.php vigilanthealthchecks.xml language src"
+
+for ITEM in $PACKAGE_ITEMS; do
+    SRC_PATH="$ROOT_DIR/$ITEM"
+    DEST_PATH="$WORK_DIR/$ITEM"
+    if [ -d "$SRC_PATH" ]; then
+        mkdir -p "$(dirname "$DEST_PATH")"
+        cp -R "$SRC_PATH" "$DEST_PATH"
+    elif [ -f "$SRC_PATH" ]; then
+        DEST_DIR="$(dirname "$DEST_PATH")"
+        mkdir -p "$DEST_DIR"
+        cp "$SRC_PATH" "$DEST_PATH"
+    fi
+done
 
 composer install \
     --no-dev \
